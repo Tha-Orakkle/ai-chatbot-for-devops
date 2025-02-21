@@ -6,22 +6,23 @@ integration_config = {
         },
         "descriptions": {
             "app_description": "An AI-powered assistant that provides responses to " +
-                "Devops and CI/CD related queries in form of github actions workflows run logs "+
-                "or as ai-generated response",
-            "app_logo": "app_logo", # url to app_logo
+            "Devops and CI/CD related queries in form of github actions workflows run logs " +
+            "or as ai-generated response",
+
+            "app_logo": "app_logo",  # url to app_logo
             "app_name": "ai-chatbot-for-devops",
-            "app_url": "app_url", # app_url
-            "background_color": "#333333" # hexcode for the backgrund-color
+            "app_url": "app_url",  # app_url
+            "background_color": "#333333"  # hexcode for the backgrund-color
         },
         "integration_category": "DevOps & CI/CD ",
         "integration_type": "modifier",
         "is_active": False,
         "key_features": [
-            " Natural Language Understanding (NLP) - Understands and interprets DevOps-related queries.",
-            "🔹 CI/CD Logs Lookup - Fetches the latest pipeline logs on request.",
-            "🔹 Deployment Insights - Provides quick tips on fixing deployment issues.",
-            "🔹 Documentation Assistant - Suggests solutions from official docs",
-        ],  
+            "Natural Language Understanding (NLP) - Understands and interprets DevOps-related queries.",
+            "CI/CD Logs Lookup - Fetches the latest pipeline logs on request.",
+            "Deployment Insights - Provides quick tips on fixing deployment issues.",
+            "Documentation Assistant - Suggests solutions from official docs",
+        ],
         "settings": [
             {
                 "label": "github_repo",
@@ -42,6 +43,6 @@ integration_config = {
                 "default": ""
             },
         ],
-        "target_url": "url" # where data will be sent to
+        "target_url": "url"  # where data will be sent to
     }
 }
