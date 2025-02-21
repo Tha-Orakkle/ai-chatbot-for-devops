@@ -2,7 +2,7 @@
 
 ## Description
 
-An integration for an event-monitoring solution -[Telex](https://telex.im)- that provides an interface to access deployment logs from GitHub workflow runs and to get DevOps and CI/CD related assitance from AI. 
+An integration for an event-monitoring application -[Telex](https://telex.im)- that provides an interface to access deployment logs from GitHub workflow runs and to get DevOps and CI/CD related assitance from AI. 
 
 This integration leverages the power of embedding and NLI-based models (`all-MiniLM-L6-V2`, `facebook/bart-large-mnli`) to classify context of messages from the Telex channel in order to generate the appropriate response.
 
@@ -32,9 +32,9 @@ This integration leverages the power of embedding and NLI-based models (`all-Min
 
 :clipboard: [specification format](./app/integration_config.py)
 
-You can also access the integration specification on [https://devbot-integration-spec.up.railway.app/api/integration.json].
+You can also access the specification [here](https://devbot-integration-spec.up.railway.app/api/integration.json).
 
 ## Author
-* Paul Adegbiran-Ayinoluwa (adegbiranayinoluwa.paul@yahoo.com)
+* Paul Adegbiran-Ayinoluwa [Mail](mailto:adegbiranayinoluwa.paul@yahoo.com)
 
 ## License
