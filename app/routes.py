@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 import threading
 
-from .integration_config import integration_config
+from .integration_config import SPECIFICATION
 from .helpers import call_request_handler_in_thread
 
 
@@ -28,7 +28,7 @@ def get_integration_config():
     """
     Returns json specification for Telex integration
     """
-    return jsonify(integration_config)
+    return jsonify(SPECIFICATION)
 
 
 # handles the request from telex.
@@ -43,7 +43,7 @@ async def target():
     channel_url = f"{CHANNEL_WEBHOOK_BASE_URL}/{json_data.get('channel_id')}"
 
     text = json_data.get('message').strip()
-    if not text.startswith('/devops'): # only respond to task prefixed with /devops
+    if not text.startswith('/devbot'): # only respond to task prefixed with /devops
         return '', 204
     
     text = text[7:].strip()

@@ -147,7 +147,7 @@ async def request_handler(channel_url, text, settings):
                 channel_url,
                 headers={"Content-Type": "application/json"},
                 json={
-                    "username": "bot_devops",
+                    "username": "devbot",
                     "event_name": "request accepted",
                     "message": "Your request is being processed",
                     "status": "success"
@@ -167,7 +167,7 @@ async def request_handler(channel_url, text, settings):
         if query_class == "github_related":
             try:
                 await client.post(channel_url, json={
-                    "username": "bot_devops",
+                    "username": "devbot",
                     "event_name": "fetching log",
                     "message": "Fetching log from github",
                     "status": "success"
@@ -180,7 +180,7 @@ async def request_handler(channel_url, text, settings):
             if status == "failed":
                 try:
                     await client.post(channel_url, json={
-                        "username": "bot_devops",
+                        "username": "devbot",
                         "event_name":  "Log failed to fetch.",
                         "message": log,
                         "status": "success"
@@ -190,8 +190,8 @@ async def request_handler(channel_url, text, settings):
                 return
 
             payload = {
-                "username": "bot_devops",
-                "event_name":  "GitHub Log Check",
+                "username": "devbot",
+                "event_name":  "GitHub Deployment Log",
                 "message": log,
                 "status": "success"
             }
@@ -199,8 +199,8 @@ async def request_handler(channel_url, text, settings):
         else:
             ai_response = await generate_ai_response(text)
             await client.post(channel_url, json={
-                "username": "bot_devops",
-                "event_name":  "bot_devops says",
+                "username": "devbot",
+                "event_name":  "devbot thinks",
                 "message": ai_response,
                 "status": "success"
             })

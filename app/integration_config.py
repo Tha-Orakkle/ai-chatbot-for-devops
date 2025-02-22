@@ -1,4 +1,4 @@
-integration_config = {
+SPECIFICATION = {
     'data': {
         'date': {
             'created_at': '2025-02-17',
@@ -6,20 +6,20 @@ integration_config = {
         },
         "descriptions": {
             "app_description": "An AI-powered assistant that provides responses to " +
-            "Devops and CI/CD related queries in form of github actions workflows run logs " +
-            "or as ai-generated response",
+            "Devops and CI/CD related queries and fetches logs from github action workflows " +
+            "on request.",
 
-            "app_logo": "app_logo",  # url to app_logo
+            "app_logo": "https://devbot-integration-spec.up.railway.app/v1/devbot-logo.jpg",  # url to app_logo
             "app_name": "ai-chatbot-for-devops",
-            "app_url": "app_url",  # app_url
-            "background_color": "#333333"  # hexcode for the backgrund-color
+            "app_url": "http://54.175.31.188",
+            "background_color": "#e7e7e7" 
         },
-        "integration_category": "DevOps & CI/CD ",
+        "integration_category": "DevOps & CI/CD",
         "integration_type": "modifier",
         "is_active": False,
         "key_features": [
             "Natural Language Understanding (NLP) - Understands and interprets DevOps-related queries.",
-            "CI/CD Logs Lookup - Fetches the latest pipeline logs on request.",
+            "CI/CD Logs Lookup - Fetches the latest pipeline logs from GitHub on request.",
             "Deployment Insights - Provides quick tips on fixing deployment issues.",
             "Documentation Assistant - Suggests solutions from official docs",
         ],
@@ -43,6 +43,9 @@ integration_config = {
                 "default": ""
             },
         ],
-        "target_url": "url"  # where data will be sent to
+        "target_url": "http://54.175.31.188/v1/webhook",
+        "NOTE": "prefix query with '/devbot'",
+        "author": "tha_orakkle",
+        "email": "adegbiranayinoluwa.paul@yahoo.com"
     }
 }
