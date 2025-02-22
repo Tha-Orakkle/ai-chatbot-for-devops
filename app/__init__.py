@@ -21,14 +21,14 @@ model = SentenceTransformer("all-MiniLM-L6-v2")
 
 ai_client = genai.Client(api_key=os.getenv('GEMINI_API_KEY'))
 
-embedding_label = "GitHub Actions run logs and diagnosing a failed deployment"
-nli_hypothesis = ["The query relates to retrieving GitHub Actions logs or diagnosing a failed deployment"]
+embedding_label = "GitHub Actions run, jobs log retrieval and diagnosing a failed deployment"
+nli_hypothesis = ["The query relates to retrieving GitHub Actions logs or diagnosing a failed deployment on GitHub"]
 
 
 sys_instruct = """
 You are a highly specialized AI assistant designed exclusively for DevOps and CI/CD-related inquiries.
 Your expertise covers DevOps principles, CI/CD pipelines, infrastructure as code, containerization,
-orchestration, monitoring, and related tools.
+orchestration, monitoring, GitHub logs retrieval and related tools.
 
 When responding to questions:
 - 🎯 If the question is **directly related** to DevOps and CI/CD, respond with accurate,
