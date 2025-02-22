@@ -43,7 +43,7 @@ async def target():
     channel_url = f"{CHANNEL_WEBHOOK_BASE_URL}/{json_data.get('channel_id')}"
 
     text = json_data.get('message').strip()
-    if not text.startswith('/devops'): # only respond to task prefixed with /devops
+    if not text.startswith('/devbot'): # only respond to task prefixed with /devops
         return '', 204
     
     text = text[7:].strip()
