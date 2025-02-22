@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 from flask import Flask
 from google import genai
 from sentence_transformers import SentenceTransformer
-from transformers import pipeline
+from transformers import AutoTokenizer, pipeline
 
 import os
 
@@ -10,15 +10,19 @@ import os
 load_dotenv()
 
 app = Flask(__name__)
-
+tokenizer = AutoTokenizer.from_pretrained(
+    "MoritzLaurer/DeBERTa-v3-base-mnli", use_fast=False)
 classifier = pipeline(
-    "zero-shot-classification", model="facebook/bart-large-mnli")
+    "zero-shot-classification",
+    model="MoritzLaurer/DeBERTa-v3-base-mnli",
+    torch_dtype="auto",
+    tokenizer=tokenizer)
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
 ai_client = genai.Client(api_key=os.getenv('GEMINI_API_KEY'))
 
 embedding_label = "GitHub Actions run logs and diagnosing a failed deployment"
-nli_hypothesis = ["The query relates to retrieving GitHub Actions run logs and diagnosing a failed deployment"]
+nli_hypothesis = ["The query relates to retrieving GitHub Actions logs or diagnosing a failed deployment"]
 
 
 sys_instruct = """
