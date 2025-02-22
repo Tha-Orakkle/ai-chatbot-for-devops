@@ -1,8 +1,15 @@
 from flask import jsonify
+from flask_cors import CORS
 
 from app import app
 from app.routes import bp
 
+
+CORS(
+    app,
+    resources={r'/*': {'origins': "/*"}},
+    supports_credentials=False
+)
 
 app.register_blueprint(bp)
 
