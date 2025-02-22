@@ -32,7 +32,7 @@ This integration leverages the power of embedding and NLI-based models (`all-Min
 
 :clipboard: [specification format](./app/integration_config.py)
 
-You can also access the specification [here](https://devbot-integration-spec.up.railway.app/api/integration.json).
+You can also access the specification [here](https://devbot-integration-spec.up.railway.app/v1/integration.json).
 
 ## Author
 * Paul Adegbiran-Ayinoluwa [Mail](mailto:adegbiranayinoluwa.paul@yahoo.com)

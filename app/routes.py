@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 import threading
 
-from .integration_config import integration_config
+from .integration_config import SPECIFICATION
 from .helpers import call_request_handler_in_thread
 
 
@@ -28,7 +28,7 @@ def get_integration_config():
     """
     Returns json specification for Telex integration
     """
-    return jsonify(integration_config)
+    return jsonify(SPECIFICATION)
 
 
 # handles the request from telex.
