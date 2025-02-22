@@ -13,6 +13,16 @@ bp = Blueprint('routes', __name__)
 # ROUTES
 
 # handles request to the integration specification
+@bp.route('/', methods=['GET'])
+def index():
+    return jsonify({
+        "message": "DevBot Telex Integration",
+        "specification_url": "https://devbot-integration-spec.up.railway.app/api/integration.json",
+        "target_url": "https://54.175.31.188/v1/webhook" 
+    })
+
+
+# handles request to the integration specification
 @bp.route('/integration.json', methods=['GET'])
 def get_integration_config():
     """
@@ -22,7 +32,7 @@ def get_integration_config():
 
 
 # handles the request from telex.
-@bp.route('/webhook', methods=['POST'])
+@bp.route('/v1/webhook', methods=['POST'])
 async def target():
     """
     creates a new thread and handles all tasks in the new thread.

@@ -33,7 +33,7 @@ def classify_query(text):
 
     if score >= 0.80:
         return "github_related"
-    elif score <= 0.6:
+    elif score <= 0.55:
         return "not_github_related"
     else:
         # if text is ambiguous conduct a logical context comparison
