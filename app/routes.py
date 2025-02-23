@@ -23,7 +23,7 @@ def index():
 
 
 # handles request to the integration specification
-@bp.route('/integration.json', methods=['GET'])
+@bp.route('/v1/integration.json', methods=['GET'])
 def get_integration_config():
     """
     Returns json specification for Telex integration
