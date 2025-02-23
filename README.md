@@ -12,12 +12,10 @@ This integration leverages the power of embedding and NLI-based models (`all-Min
 ```
 
 
-
 ## Environmental Variables
 * Add keys to your environment
 ```bash
 GEMINI_KEY=<your-google-gemini-API-key>
-CHANNEL_URl=<telex-channel-webhook-url>
 ```
 
 ## Installation
@@ -42,6 +40,44 @@ CHANNEL_URl=<telex-channel-webhook-url>
     hypercorn main:app
     ```
 
+## Request
+- POST /v1/webhook
+- request body:
+
+```json
+{
+    "settings": [
+        {
+            "label": "channel_url",
+            "default": "<your-channel-webhook-url>"
+        },
+        {
+            "label": "github_repo",
+            "default": "fastapi-book-project"
+        },
+        {
+            "label": "repo_owner",
+            "default": "Tha-Orakkle"
+        },
+        {
+            "label": "github_PAT",
+            "default": "<github-personal-access-token>" # generate a token with read only access
+        }
+    ],
+    "message": "/devbot fetch my deployment log from github"
+}
+```
+* [How to generate GitHub Personal Access Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
+
+## Response
+```json
+{
+    "username": "devbot",
+    "event_type": "operation-that-was-performed by bot",
+    "message": "devbot-response",
+    "status": "success"
+}
+```
 
 ## Integration Specification
 
