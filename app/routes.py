@@ -55,7 +55,7 @@ async def target():
 
     text = text[7:].strip()
     if text == "":
-        text = "Hello, what can be do today?"
+        text = "Hello, what can we do today?"
     settings = {x['label']: x['default'] for x in json_data['settings']}
     channel_url = settings.get('channel_url', None)
     #start new thread
