@@ -44,13 +44,18 @@ async def target():
     json_data = request.get_json()
     channel_url = os.getenv("CHANNEL_URL")
 
-    text = json_data.get('message').strip()
+    text = json_data.get('message', None)
+
+    if not text:
+        return '', 204
     soup = BeautifulSoup(text, "html.parser")
     text =soup.get_text().strip()
     if not text.startswith('/devbot'): # only respond to task prefixed with /devops
         return '', 204
-    
+
     text = text[7:].strip()
+    if text == "":
+        text = "Hello, what can be do today?"
     settings = {x['label']: x['default'] for x in json_data['settings']}
 
     #start new thread
