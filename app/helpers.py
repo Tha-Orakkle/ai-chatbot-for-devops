@@ -1,3 +1,4 @@
+from bs4 import BeautifulSoup
 from flask import jsonify
 from google.genai import types
 from sentence_transformers.util import cos_sim
@@ -5,6 +6,7 @@ from sentence_transformers.util import cos_sim
 import asyncio
 import httpx
 import io
+import markdown
 import os
 import zipfile
 
@@ -43,6 +45,10 @@ def classify_query(text):
             return "github_related"
         return "not_github_related"
 
+def clean_ai_response(text):
+    html = markdown.markdown(text)
+    soup = BeautifulSoup(html, "html.parser")
+    return soup.get_text()
 
 def extract_log_content(content):
     """
@@ -207,11 +213,13 @@ async def request_handler(channel_url, text, settings):
 
         else:
             ai_response = await generate_ai_response(text)
+            cleaned_ai_text = clean_ai_response(ai_response)
+            logger.info(cleaned_ai_text)
             try:
                 response = await client.post(channel_url, json={
                     "username": "devbot",
                     "event_name":  "devbot thinks",
-                    "message": ai_response,
+                    "message": cleaned_ai_text,
                     "status": "success"
                 })
                 response.raise_for_status()
