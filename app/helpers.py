@@ -152,7 +152,7 @@ async def request_handler(channel_url, text, settings):
                 headers={"Content-Type": "application/json"},
                 json={
                     "username": "devbot",
-                    "event_name": "request accepted",
+                    "event_name": "Request accepted",
                     "message": "Your request is being processed",
                     "status": "success"
                 }
@@ -186,7 +186,7 @@ async def request_handler(channel_url, text, settings):
                         "username": "devbot",
                         "event_name":  "Log failed to fetch.",
                         "message": log,
-                        "status": "success"
+                        "status": "Error"
                     })
                     response.raise_for_status()
                 except Exception as e:

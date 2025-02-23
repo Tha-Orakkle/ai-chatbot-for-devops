@@ -42,7 +42,7 @@ async def target():
     be executed asynchronously in new thread
     """
     json_data = request.get_json()
-    channel_url = os.getenv("CHANNEL_URL")
+    # channel_url = os.getenv("CHANNEL_URL")
 
     text = json_data.get('message', None)
 
@@ -57,7 +57,7 @@ async def target():
     if text == "":
         text = "Hello, what can be do today?"
     settings = {x['label']: x['default'] for x in json_data['settings']}
-
+    channel_url = settings.get('channel_url', None)
     #start new thread
     thread = threading.Thread(
         target=call_request_handler_in_thread,
@@ -65,4 +65,4 @@ async def target():
     thread.start()
     
     return jsonify({
-        "status": "request processing"})
+        "status": "request processing"}), 202
