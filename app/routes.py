@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from bs4 import BeautifulSoup
 import threading
 import os
 
@@ -44,6 +45,8 @@ async def target():
     channel_url = os.getenv("CHANNEL_URL")
 
     text = json_data.get('message').strip()
+    soup = BeautifulSoup(text, "html.parser")
+    text =soup.get_text().strip()
     if not text.startswith('/devbot'): # only respond to task prefixed with /devops
         return '', 204
     
