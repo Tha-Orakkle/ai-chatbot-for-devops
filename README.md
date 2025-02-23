@@ -5,6 +5,13 @@
 An integration for an event-monitoring application -[Telex](https://telex.im)- that provides an interface to access deployment logs from GitHub workflow runs and to get DevOps and CI/CD related assitance from AI. 
 
 This integration leverages the power of embedding and NLI-based models (`all-MiniLM-L6-V2`, `MoritzLaurer/DeBERTa-v3-base-mnli`) to classify context of messages from the Telex channel in order to generate the appropriate response.
+### Syntax
+```json
+/devbot how do i fetch my deployment logs? 
+# prefix query with /devbot
+```
+
+
 
 ## Environmental Variables
 * Add keys to your environment
