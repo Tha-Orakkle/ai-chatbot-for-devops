@@ -25,7 +25,6 @@ def classify_query(text):
     Args:
         text(string) - query
     """
-
     embeddings = model.encode([text, embedding_label], convert_to_tensor=True)
     similarity = cos_sim(embeddings[0], embeddings[1])
     score = similarity.item()
@@ -79,6 +78,7 @@ async def fetch_github_logs(owner, repo, token):
     headers = {'Authorization': f'Bearer {token}'}
 
     async with httpx.AsyncClient(follow_redirects=True) as client:
+        runs = None
         try:
             response = await client.get(gh_api_url, headers=headers) # gets all runs
             if response.status_code != 200:
@@ -88,10 +88,10 @@ async def fetch_github_logs(owner, repo, token):
                     "Please, ensure a valid github owner, repo and token have " +
                     "been provided in the settings."
                 ]
+            runs = response.json().get('workflow_runs', [])
         except Exception as e:
             logger.info(f"An error occured fetching GitHub Action runs: {e}")
     
-        runs = response.json().get('workflow_runs', [])
         if not runs:
             return [
                 "failed",
@@ -124,7 +124,7 @@ async def generate_ai_response(text):
         response = ai_client.models.generate_content(
             model="gemini-2.0-flash",
             config=types.GenerateContentConfig(
-                temperature=0.7,
+                temperature=0.8,
                 top_p=0.9,
                 top_k=50,
                 system_instruction=sys_instruct),
