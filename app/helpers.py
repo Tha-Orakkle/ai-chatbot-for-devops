@@ -11,10 +11,11 @@ import zipfile
 from . import (
     ai_client,
     classifier,
-    sys_instruct,
-    model,
     embedding_label,
-    nli_hypothesis
+    logger,
+    model,
+    nli_hypothesis,
+    sys_instruct
 )
 
 
@@ -28,9 +29,7 @@ def classify_query(text):
     embeddings = model.encode([text, embedding_label], convert_to_tensor=True)
     similarity = cos_sim(embeddings[0], embeddings[1])
     score = similarity.item()
-
-    print(f"embedding score: {score}")
-
+    logger.info(f"Embedding score {score}")
     if score >= 0.80:
         return "github_related"
     elif score <= 0.55:
@@ -40,7 +39,7 @@ def classify_query(text):
         # using an NLI-based model
         nli_result = classifier(text, nli_hypothesis)
         nli_score = nli_result['scores'][0]
-        print(f"NLI score: {nli_score}")
+        logger.info(f"NLI score: {nli_score}")
         if nli_score >= 0.6:
             return "github_related"
         return "not_github_related"
@@ -80,19 +79,19 @@ async def fetch_github_logs(owner, repo, token):
     headers = {'Authorization': f'Bearer {token}'}
 
     async with httpx.AsyncClient(follow_redirects=True) as client:
-        response = await client.get(gh_api_url, headers=headers) # gets all runs
-        res_json = response.json()
-
-        if response.status_code != 200:
-            print(res_json)
-            return [
-                "failed",
-                "Repository not found. Confirm github owner and repo are " +
-                "valid in settings"
-            ]
-
-        runs = res_json.get('workflow_runs', [])
-
+        try:
+            response = await client.get(gh_api_url, headers=headers) # gets all runs
+            if response.status_code != 200:
+                logger.info(f"GitHub API returned {response.status_code} {response.text}")
+                return [
+                    "failed",
+                    "Please, ensure a valid github owner, repo and token have " +
+                    "been provided in the settings."
+                ]
+        except Exception as e:
+            logger.info(f"An error occured fetching GitHub Action runs: {e}")
+    
+        runs = response.json().get('workflow_runs', [])
         if not runs:
             return [
                 "failed",
@@ -102,14 +101,16 @@ async def fetch_github_logs(owner, repo, token):
         run_id = runs[0]['id']
 
         logs_url = f"{gh_api_url}/{run_id}/logs"
-        log_response = await client.get(logs_url, headers=headers) # get run_id-specific log
-        print(log_response)
-        if log_response.status_code != 200:
-            logs_json = log_response.json()
-            print("Error occured while trying to get logs", logs_json.message)
-            return "failed", logs_json.message
-
-        return "success", extract_log_content(log_response.content)
+        try:
+            log_response = await client.get(logs_url, headers=headers) # get run_id-specific log
+            if log_response.status_code != 200:
+                return [
+                    "failed",
+                    f"An error occured fetching log for run {run_id}"
+                ]
+            return "success", extract_log_content(log_response.content)
+        except Exception as e:
+            logger.info(f"An error occured fetching log for run {run_id}: {e}")
 
 
 async def generate_ai_response(text):
@@ -119,16 +120,19 @@ async def generate_ai_response(text):
     Args:
         text(string) - user input
     """
-    response = ai_client.models.generate_content(
-        model="gemini-2.0-flash",
-        config=types.GenerateContentConfig(
-            temperature=0.7,
-            top_p=0.9,
-            top_k=50,
-            system_instruction=sys_instruct),
-        contents=[text]
-    )
-    return response.text
+    try:
+        response = ai_client.models.generate_content(
+            model="gemini-2.0-flash",
+            config=types.GenerateContentConfig(
+                temperature=0.7,
+                top_p=0.9,
+                top_k=50,
+                system_instruction=sys_instruct),
+            contents=[text]
+        )
+        return response.text
+    except Exception as e:
+        logger.info(f"An error occured while getting AI response from Gemini: {e}")
 
 
 async def request_handler(channel_url, text, settings):
@@ -154,9 +158,8 @@ async def request_handler(channel_url, text, settings):
                 }
             )
             response.raise_for_status()
-            print(response)
         except Exception as e:
-            print(f"Error in request_handler: {e}")
+            logger.info(f"Error in request_handler: {e}")
 
         query_class = classify_query(text)
 
@@ -166,7 +169,7 @@ async def request_handler(channel_url, text, settings):
 
         if query_class == "github_related":
             try:
-                await client.post(channel_url, json={
+                response = await client.post(channel_url, json={
                     "username": "devbot",
                     "event_name": "fetching log",
                     "message": "Fetching log from github",
@@ -174,19 +177,20 @@ async def request_handler(channel_url, text, settings):
                 })
                 response.raise_for_status()
             except Exception as e:
-                print(f"Error in request_handler: {e}")
+                logger.info(f"Error occurred while notifying log fetch: {e}")
 
             status, log = await fetch_github_logs(owner, repo, token)
             if status == "failed":
                 try:
-                    await client.post(channel_url, json={
+                    response = await client.post(channel_url, json={
                         "username": "devbot",
                         "event_name":  "Log failed to fetch.",
                         "message": log,
                         "status": "success"
                     })
+                    response.raise_for_status()
                 except Exception as e:
-                    print(f"Error in request_handler: {e}")
+                    logger.info(f"Error occurred while sending log request errors to channel: {e}")
                 return
 
             payload = {
@@ -195,15 +199,24 @@ async def request_handler(channel_url, text, settings):
                 "message": log,
                 "status": "success"
             }
-            await client.post(channel_url, json=payload)
+            try:
+                response = await client.post(channel_url, json=payload)
+            except Exception as e:
+                logger.info(f"Error occurred while sending log to channel: {e}")
+                
+
         else:
             ai_response = await generate_ai_response(text)
-            await client.post(channel_url, json={
-                "username": "devbot",
-                "event_name":  "devbot thinks",
-                "message": ai_response,
-                "status": "success"
-            })
+            try:
+                response = await client.post(channel_url, json={
+                    "username": "devbot",
+                    "event_name":  "devbot thinks",
+                    "message": ai_response,
+                    "status": "success"
+                })
+                response.raise_for_status()
+            except Exception as e:
+                logger.info("Error occurred while sending AI-generated response")
 
 
 def call_request_handler_in_thread(channel_url, text, settings):

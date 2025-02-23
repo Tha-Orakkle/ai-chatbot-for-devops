@@ -4,10 +4,13 @@ from google import genai
 from sentence_transformers import SentenceTransformer
 from transformers import AutoTokenizer, pipeline
 
+import logging
 import os
 
 
 load_dotenv()
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 tokenizer = AutoTokenizer.from_pretrained(
@@ -22,7 +25,7 @@ model = SentenceTransformer("all-MiniLM-L6-v2")
 ai_client = genai.Client(api_key=os.getenv('GEMINI_API_KEY'))
 
 embedding_label = "GitHub Actions run, jobs log retrieval and diagnosing a failed deployment"
-nli_hypothesis = ["The query relates to retrieving GitHub Actions logs or diagnosing a failed deployment on GitHub"]
+nli_hypothesis = ["The query relates to retrieving GitHub logs or diagnosing a failed deployment on GitHub"]
 
 
 sys_instruct = """

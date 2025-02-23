@@ -1,5 +1,7 @@
 from flask import Blueprint, jsonify, request
+from bs4 import BeautifulSoup
 import threading
+import os
 
 from .integration_config import SPECIFICATION
 from .helpers import call_request_handler_in_thread
@@ -23,7 +25,7 @@ def index():
 
 
 # handles request to the integration specification
-@bp.route('/integration.json', methods=['GET'])
+@bp.route('/v1/integration.json', methods=['GET'])
 def get_integration_config():
     """
     Returns json specification for Telex integration
@@ -40,9 +42,11 @@ async def target():
     be executed asynchronously in new thread
     """
     json_data = request.get_json()
-    channel_url = f"{CHANNEL_WEBHOOK_BASE_URL}/{json_data.get('channel_id')}"
+    channel_url = os.getenv("CHANNEL_URL")
 
     text = json_data.get('message').strip()
+    soup = BeautifulSoup(text, "html.parser")
+    text =soup.get_text().strip()
     if not text.startswith('/devbot'): # only respond to task prefixed with /devops
         return '', 204
     

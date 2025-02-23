@@ -6,6 +6,13 @@ An integration for an event-monitoring application -[Telex](https://telex.im)- t
 
 This integration leverages the power of embedding and NLI-based models (`all-MiniLM-L6-V2`, `MoritzLaurer/DeBERTa-v3-base-mnli`) to classify context of messages from the Telex channel in order to generate the appropriate response.
 
+## Environmental Variables
+* Add keys to your environment
+```bash
+GEMINI_KEY=<your-google-gemini-API-key>
+CHANNEL_URl=<telex-channel-webhook-url>
+```
+
 ## Installation
 1. Clone the repository:
     ```
@@ -27,6 +34,7 @@ This integration leverages the power of embedding and NLI-based models (`all-Min
     ```bash
     hypercorn main:app
     ```
+
 
 ## Integration Specification
 
